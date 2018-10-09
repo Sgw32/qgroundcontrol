@@ -91,4 +91,23 @@ Rectangle {
             maxHeight:          _availableValueHeight
         }
     }
+
+    Item {
+        id:                 _ICEItem
+        anchors.topMargin:  ScreenTools.defaultFontPixelHeight / 4
+        anchors.top:        parent.bottom
+        width:              parent.width
+        height:             _valuesWidget.height
+        visible:            widgetRoot.showValues
+
+        Rectangle {
+            id:                         _spacer1
+            anchors.topMargin:  ScreenTools.defaultFontPixelHeight / 4
+            anchors.top:        parent.bottom
+            anchors.horizontalCenter:   parent.horizontalCenter
+            height:                     _outerRadius * 4
+            width:                      parent.width * 0.9
+            color:                      qgcPal.window
+        }
+    }
 }
