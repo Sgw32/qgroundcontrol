@@ -183,6 +183,7 @@ QVariantList& QGCCorePlugin::instrumentPages(void)
 
         _p->instrumentPageWidgetList.append(QVariant::fromValue(_p->valuesPageWidgetInfo));
         _p->instrumentPageWidgetList.append(QVariant::fromValue(_p->cameraPageWidgetInfo));
+        _p->instrumentPageWidgetList.append(QVariant::fromValue(_p->valuesPageWidgetInfo));
 #if defined(QGC_GST_STREAMING)
         _p->instrumentPageWidgetList.append(QVariant::fromValue(_p->videoPageWidgetInfo));
 #endif

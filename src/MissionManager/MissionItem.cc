@@ -333,9 +333,25 @@ void MissionItem::setSequenceNumber(int sequenceNumber)
 
 void MissionItem::setCommand(MAV_CMD command)
 {
+    double p1 = param1();
+    double p2 = param2();
+    double p3 = param3();
+    double p4 = param4();
+    double p5 = param5();
+    double p6 = param6();
+    double p7 = param7();
+
     if ((MAV_CMD)this->command() != command) {
         _commandFact.setRawValue(command);
     }
+    setParam1(p1);
+    setParam2(p2);
+    setParam3(p3);
+    setParam4(p4);
+    setParam5(p5);
+    setParam6(p6);
+    setParam7(p7);
+
 }
 
 void MissionItem::setFrame(MAV_FRAME frame)

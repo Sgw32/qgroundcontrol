@@ -19,7 +19,7 @@ import QGroundControl.Palette       1.0
 
 Rectangle {
     id:             root
-    width:          getPreferredInstrumentWidth()
+    width:          getPreferredInstrumentWidth()*1.5
     height:         _outerRadius * 2
     radius:         _outerRadius
     color:          qgcPal.window
@@ -101,13 +101,86 @@ Rectangle {
         visible:            widgetRoot.showValues
 
         Rectangle {
-            id:                         _spacer1
+            id:                         _icews1
             anchors.topMargin:  ScreenTools.defaultFontPixelHeight / 4
             anchors.top:        parent.bottom
             anchors.horizontalCenter:   parent.horizontalCenter
             height:                     _outerRadius * 4
-            width:                      parent.width * 0.9
+            width:                      parent.width
             color:                      qgcPal.window
+
+            QGCICEWidget {
+                id:                 icew
+                anchors.topMargin:  ScreenTools.defaultFontPixelHeight / 4
+                anchors.leftMargin: _topBottomMargin
+                anchors.left:       parent.left
+                anchors.top:        parent.top
+                size:               _innerRadius * 2
+                vehicle:            _activeVehicle
+                //anchors.verticalCenter: parent.verticalCenter
+            }
+
+            QGCICEWidget {
+                id:                 icew2
+                anchors.topMargin:  ScreenTools.defaultFontPixelHeight / 4
+                anchors.leftMargin: _topBottomMargin
+                anchors.left:       icew.right
+                anchors.top:        parent.top
+                size:               _innerRadius * 2
+                vehicle:            _activeVehicle
+                temperature_widget: false
+                //anchors.verticalCenter: parent.verticalCenter
+            }
+
+            QGCLabel {
+                width:                  parent.width
+                horizontalAlignment:    Text.AlignHCenter
+                wrapMode:               Text.WordWrap
+                text:                   _activeVehicle ? "RPM: " + _activeVehicle.ice.rpm.enumOrValueString : "RPM: 0"
+                font.pointSize:         ScreenTools.mediumFontPointSize * 2
+                font.family:            ScreenTools.demiboldFontFamily
+                y: _innerRadius*2+10
+            }
+            QGCLabel {
+                width:                  parent.width
+                horizontalAlignment:    Text.AlignHCenter
+                wrapMode:               Text.WordWrap
+                text:                   _activeVehicle ? "ICE t.: " + _activeVehicle.ice.iceTemp.enumOrValueString : "ICE t.: 0"
+                font.pointSize:         ScreenTools.mediumFontPointSize * 2
+                font.family:            ScreenTools.demiboldFontFamily
+                y: _innerRadius*2+40
+            }
+            QGCLabel {
+                width:                  parent.width
+                horizontalAlignment:    Text.AlignHCenter
+                wrapMode:               Text.WordWrap
+                text:                   _activeVehicle ? "Gen.: T " + _activeVehicle.ice.genTemp.enumOrValueString : "Gen. T: 0"
+                font.pointSize:         ScreenTools.mediumFontPointSize * 2
+                font.family:            ScreenTools.demiboldFontFamily
+                y: _innerRadius*2+70
+            }
+            QGCLabel {
+                width:                  parent.width
+                horizontalAlignment:    Text.AlignHCenter
+                wrapMode:               Text.WordWrap
+                text:                   _activeVehicle ? "Curr.: " + _activeVehicle.ice.chargeCurrent.enumOrValueString : "Curr.: 0"
+                font.pointSize:         ScreenTools.mediumFontPointSize * 2
+                font.family:            ScreenTools.demiboldFontFamily
+                y: _innerRadius*2+100
+            }
+
+            /*ProgressBar {
+                id:             xBar
+                height:         50
+                orientation:    Qt.Vertical
+                minimumValue:   0
+                maximumValue:   200
+                y: _innerRadius*2+100
+                value:          150
+            }*/
+
         }
+
+
     }
 }

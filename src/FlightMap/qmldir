@@ -14,6 +14,7 @@ MapScale                1.0 MapScale.qml
 QGCArtificialHorizon    1.0 QGCArtificialHorizon.qml
 QGCAttitudeHUD          1.0 QGCAttitudeHUD.qml
 QGCAttitudeWidget       1.0 QGCAttitudeWidget.qml
+QGCICEWidget            1.0 QGCICEWidget.qml
 QGCCompassWidget        1.0 QGCCompassWidget.qml
 QGCPitchIndicator       1.0 QGCPitchIndicator.qml
 

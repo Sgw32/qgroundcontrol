@@ -75,6 +75,7 @@ const char* Vehicle::_gpsFactGroupName =                "gps";
 const char* Vehicle::_battery1FactGroupName =           "battery";
 const char* Vehicle::_battery2FactGroupName =           "battery2";
 const char* Vehicle::_windFactGroupName =               "wind";
+const char* Vehicle::_ICEFactGroupName =                "ICE";
 const char* Vehicle::_vibrationFactGroupName =          "vibration";
 const char* Vehicle::_temperatureFactGroupName =        "temperature";
 const char* Vehicle::_clockFactGroupName =              "clock";
@@ -197,6 +198,7 @@ Vehicle::Vehicle(LinkInterface*             link,
     , _battery1FactGroup(this)
     , _battery2FactGroup(this)
     , _windFactGroup(this)
+    , _ICEFactGroup(this)
     , _vibrationFactGroup(this)
     , _temperatureFactGroup(this)
     , _clockFactGroup(this)
@@ -390,6 +392,7 @@ Vehicle::Vehicle(MAV_AUTOPILOT              firmwareType,
     , _battery1FactGroup(this)
     , _battery2FactGroup(this)
     , _windFactGroup(this)
+    , _ICEFactGroup(this)
     , _vibrationFactGroup(this)
     , _clockFactGroup(this)
     , _distanceSensorFactGroup(this)
@@ -461,6 +464,7 @@ void Vehicle::_commonInit(void)
     _addFactGroup(&_battery1FactGroup,          _battery1FactGroupName);
     _addFactGroup(&_battery2FactGroup,          _battery2FactGroupName);
     _addFactGroup(&_windFactGroup,              _windFactGroupName);
+    _addFactGroup(&_ICEFactGroup,         _ICEFactGroupName);
     _addFactGroup(&_vibrationFactGroup,         _vibrationFactGroupName);
     _addFactGroup(&_temperatureFactGroup,       _temperatureFactGroupName);
     _addFactGroup(&_clockFactGroup,             _clockFactGroupName);
@@ -680,6 +684,9 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
         break;
     case MAVLINK_MSG_ID_SCALED_IMU3:
         emit mavlinkScaledImu3(message);
+        break;
+    case MAVLINK_MSG_ID_GEN_STATUS:
+        _handleICE(message);
         break;
     case MAVLINK_MSG_ID_VIBRATION:
         _handleVibration(message);
@@ -1382,6 +1389,28 @@ void Vehicle::_handleVibration(mavlink_message_t& message)
     _vibrationFactGroup.clipCount1()->setRawValue(vibration.clipping_0);
     _vibrationFactGroup.clipCount2()->setRawValue(vibration.clipping_1);
     _vibrationFactGroup.clipCount3()->setRawValue(vibration.clipping_2);
+}
+
+void Vehicle::_handleICE(mavlink_message_t& message)
+{
+    mavlink_gen_status_t genstatus;
+    mavlink_msg_gen_status_decode(&message, &genstatus);
+
+    _ICEFactGroup.chargeCurrent()->setRawValue(genstatus.charge_current);
+    _ICEFactGroup.rpm()->setRawValue(genstatus.rpm);
+    _ICEFactGroup.iceTemp()->setRawValue(genstatus.ice_temp);
+    _ICEFactGroup.genTemp()->setRawValue(genstatus.gen_temp);
+    _ICEFactGroup.fuelRemaining()->setRawValue(genstatus.fuel_remaining);
+    _ICEFactGroup.cooler()->setRawValue(genstatus.cooler);
+    _ICEFactGroup.starter()->setRawValue(genstatus.starter);
+    _ICEFactGroup.throttle()->setRawValue(genstatus.throttle);
+
+    /*_vibrationFactGroup.xAxis()->setRawValue(vibration.vibration_x);
+    _vibrationFactGroup.yAxis()->setRawValue(vibration.vibration_y);
+    _vibrationFactGroup.zAxis()->setRawValue(vibration.vibration_z);
+    _vibrationFactGroup.clipCount1()->setRawValue(vibration.clipping_0);
+    _vibrationFactGroup.clipCount2()->setRawValue(vibration.clipping_1);
+    _vibrationFactGroup.clipCount3()->setRawValue(vibration.clipping_2);*/
 }
 
 void Vehicle::_handleWindCov(mavlink_message_t& message)
@@ -3776,6 +3805,46 @@ VehicleWindFactGroup::VehicleWindFactGroup(QObject* parent)
     _directionFact.setRawValue      (std::numeric_limits<float>::quiet_NaN());
     _speedFact.setRawValue          (std::numeric_limits<float>::quiet_NaN());
     _verticalSpeedFact.setRawValue  (std::numeric_limits<float>::quiet_NaN());
+}
+
+const char* VehicleICEFactGroup::_chargeCurrentFactName =      "chargeCurrent";
+const char* VehicleICEFactGroup::_rpmFactName =      "rpm";
+const char* VehicleICEFactGroup::_iceTempFactName =      "iceTemp";
+const char* VehicleICEFactGroup::_genTempFactName = "genTemp";
+const char* VehicleICEFactGroup::_fuelRemainingFactName = "fuelRemaining";
+const char* VehicleICEFactGroup::_coolerFactName = "cooler";
+const char* VehicleICEFactGroup::_starterFactName = "starter";
+const char* VehicleICEFactGroup::_throttleFactName = "throttle";
+
+VehicleICEFactGroup::VehicleICEFactGroup(QObject* parent)
+    : FactGroup(1000, ":/json/Vehicle/ICEFact.json", parent)
+    , _chargeCurrentFact        (0, _chargeCurrentFactName,         FactMetaData::valueTypeDouble)
+    , _rpmFact        (0, _rpmFactName,         FactMetaData::valueTypeUint32)
+    , _iceTempFact        (0, _iceTempFactName,         FactMetaData::valueTypeDouble)
+    , _genTempFact   (0, _genTempFactName,    FactMetaData::valueTypeDouble)
+    , _fuelRemainingFact   (0, _fuelRemainingFactName,    FactMetaData::valueTypeUint8)
+    , _coolerFact   (0, _coolerFactName,    FactMetaData::valueTypeUint8)
+    , _starterFact   (0, _starterFactName,    FactMetaData::valueTypeUint8)
+    , _throttleFact   (0, _throttleFactName,    FactMetaData::valueTypeUint8)
+{
+    _addFact(&_chargeCurrentFact,       _chargeCurrentFactName);
+    _addFact(&_rpmFact,       _rpmFactName);
+    _addFact(&_iceTempFact,       _iceTempFactName);
+    _addFact(&_genTempFact,  _genTempFactName);
+    _addFact(&_fuelRemainingFact,  _fuelRemainingFactName);
+    _addFact(&_coolerFact,  _coolerFactName);
+    _addFact(&_starterFact,  _starterFactName);
+    _addFact(&_throttleFact,  _throttleFactName);
+
+    // Start out as zero
+    _chargeCurrentFact.setRawValue(0);
+    _rpmFact.setRawValue(0);
+    _iceTempFact.setRawValue(20);
+    _genTempFact.setRawValue(20);
+    _fuelRemainingFact.setRawValue(0);
+    _coolerFact.setRawValue(0);
+    _starterFact.setRawValue(0);
+    _throttleFact.setRawValue(0);
 }
 
 const char* VehicleVibrationFactGroup::_xAxisFactName =      "xAxis";

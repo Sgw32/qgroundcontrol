@@ -97,6 +97,49 @@ Item {
             sourceSize.width:   width
             fillMode:           Image.PreserveAspectFit
         }
+
+        Rectangle {
+            anchors.centerIn:   parent
+            width:              size * 0.001
+            height:             size * 0.001
+            opacity:            1
+
+            QGCLabel {
+                text:               vehicle.armed ? qsTr("ARMED") : qsTr("DISARMED\n")
+                font.family:        vehicle ? ScreenTools.demiboldFontFamily : ScreenTools.normalFontFamily
+                font.pointSize:     12
+                color:              "red"
+                anchors.centerIn:   parent
+               }
+            QGCLabel {
+                text:               qsTr("\n")+vehicle.flightMode
+                font.family:        vehicle ? ScreenTools.demiboldFontFamily : ScreenTools.normalFontFamily
+                font.pointSize:     12
+                color:              "red"
+                anchors.centerIn:   parent
+               }
+        }
+    }
+
+    Item {
+        id:             instrument_t1
+        anchors.fill:   parent
+        visible:        false
+
+       /* QGCLabel {
+            anchors.bottom:             parent.top
+            anchors.horizontalCenter:   parent.horizontalCenter
+            text:                       vehicle.armed ? qsTr("Armed") : qsTr("Disarmed")
+            color:                      "black"
+            y: -10
+        }*/
+        /*QGCLabel {
+            anchors.bottom:             parent.bottom
+            anchors.horizontalCenter:   parent.horizontalCenter
+            text:                       vehicle ? vehicle.flightMode : ""
+            color:                      "black"
+            y: -15
+        }*/
     }
 
     Rectangle {

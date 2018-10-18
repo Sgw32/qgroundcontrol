@@ -984,10 +984,18 @@ void APMFirmwarePlugin::startMission(Vehicle* vehicle)
 
     if (!vehicle->armed()) {
         // First switch to flight mode we can arm from
-        if (!_setFlightModeAndValidate(vehicle, "Guided")) {
-            qgcApp()->showMessage(tr("Unable to start mission: Vehicle failed to change to Guided mode."));
-            return;
+
+        //!!! Switch to auto immediately
+        if ((!_setFlightModeAndValidate(vehicle, "Guided"))) {
+            //qgcApp()->showMessage(tr("Warning: Vehicle failed to change to Guided mode."));
+            //return;
+            if (!_setFlightModeAndValidate(vehicle, "Auto")) {
+                qgcApp()->showMessage(tr("Unable to start mission: Vehicle failed to change to Auto mode."));
+                return;
+            }
         }
+
+
 
         if (!_armVehicleAndValidate(vehicle)) {
             qgcApp()->showMessage(tr("Unable to start mission: Vehicle failed to arm."));

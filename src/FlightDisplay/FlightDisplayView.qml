@@ -511,7 +511,7 @@ QGCView {
             title:              qsTr("Fly")
             maxHeight:          (_flightVideo.visible ? _flightVideo.y : parent.height) - toolStrip.y
             buttonVisible:      [ _useChecklist, _guidedController.showTakeoff || !_guidedController.showLand, _guidedController.showLand && !_guidedController.showTakeoff, true, true, true ]
-            buttonEnabled:      [ _useChecklist && _activeVehicle, _guidedController.showTakeoff, _guidedController.showLand, _guidedController.showRTL, _guidedController.showPause, _anyActionAvailable ]
+            buttonEnabled:      [ _useChecklist && _activeVehicle, _guidedController.showTakeoff, _guidedController.showLand, _guidedController.showRTL, _guidedController.showPause, _anyActionAvailable, true, true, true ]
 
             property bool _anyActionAvailable: _guidedController.showStartMission || _guidedController.showResumeMission || _guidedController.showChangeAlt || _guidedController.showLandAbort
             property var _actionModel: [
@@ -577,18 +577,65 @@ QGCView {
                     name:       qsTr("Action"),
                     iconSource: "/res/action.svg",
                     action:     -1
+                },
+                {
+                    name:               qsTr("Center"),
+                    iconSource:         "/qmlimages/MapCenter.svg",
+                    action:     -2,
+                    dropPanelComponent: centerMapDropPanel
+                },
+                {
+                    name:               qsTr("In"),
+                    iconSource:         "/qmlimages/ZoomPlus.svg",
+                    action:     -3
+                },
+                {
+                    name:               qsTr("Out"),
+                    iconSource:         "/qmlimages/ZoomMinus.svg",
+                    action:     -4
                 }
             ]
-
+            //TODO: ADD PLUS MINUS CENTER
             onClicked: {
                 guidedActionsController.closeAll()
                 var action = model[index].action
-                if (action === -1) {
+                if (action === -1)
+                {
                     guidedActionList.model   = _actionModel
                     guidedActionList.visible = true
-                } else {
+                }
+                else if ((action === -2)||(action === -3)||(action === -4))
+                {
+                    switch (action) {
+
+                    case -3:
+                        _flightMap.zoomLevel += 0.5
+                        break
+                    case -4:
+                        _flightMap.zoomLevel -= 0.5
+                        break
+                    }
+                }
+                else
+                {
                     _guidedController.confirmAction(action)
                 }
+            }
+        }
+
+        MapFitFunctions {
+            id:                         mapFitFunctions  // The name for this id cannot be changed without breaking references outside of this code. Beware!
+            map:                        _flightMap
+            usePlannedHomePosition:     true
+            planMasterController:       _planMasterController
+        }
+
+        Component {
+            id: centerMapDropPanel
+
+            CenterMapDropPanel {
+                map:            _flightMap
+                fitFunctions:   mapFitFunctions
             }
         }
 

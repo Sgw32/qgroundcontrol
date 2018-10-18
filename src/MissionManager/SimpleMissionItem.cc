@@ -807,10 +807,24 @@ QString SimpleMissionItem::category(void) const
 
 void SimpleMissionItem::setCommand(int command)
 {
+    double p1 = _missionItem.param1();
+    double p2 = _missionItem.param2();
+    double p3 = _missionItem.param3();
+    double p4 = _missionItem.param4();
+    double p5 = _missionItem.param5();
+    double p6 = _missionItem.param6();
+    double p7 = _missionItem.param7();
     if ((MAV_CMD)command != _missionItem.command()) {
         _missionItem.setCommand((MAV_CMD)command);
         _updateOptionalSections();
     }
+    _missionItem.setParam1(p1);
+    _missionItem.setParam2(p2);
+    _missionItem.setParam3(p3);
+    _missionItem.setParam4(p4);
+    _missionItem.setParam5(p5);
+    _missionItem.setParam6(p6);
+    _missionItem.setParam7(p7);
 }
 
 void SimpleMissionItem::setCoordinate(const QGeoCoordinate& coordinate)

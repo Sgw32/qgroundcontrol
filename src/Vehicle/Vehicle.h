@@ -178,6 +178,51 @@ private:
     Fact        _clipCount3Fact;
 };
 
+class VehicleICEFactGroup : public FactGroup
+{
+    Q_OBJECT
+
+public:
+    VehicleICEFactGroup(QObject* parent = nullptr);
+
+    Q_PROPERTY(Fact* chargeCurrent      READ chargeCurrent      CONSTANT)
+    Q_PROPERTY(Fact* rpm      READ rpm      CONSTANT)
+    Q_PROPERTY(Fact* iceTemp      READ iceTemp      CONSTANT)
+    Q_PROPERTY(Fact* genTemp READ genTemp CONSTANT)
+    Q_PROPERTY(Fact* fuelRemaining READ fuelRemaining CONSTANT)
+    Q_PROPERTY(Fact* cooler READ cooler CONSTANT)
+    Q_PROPERTY(Fact* starter READ starter CONSTANT)
+    Q_PROPERTY(Fact* throttle READ throttle CONSTANT)
+
+    Fact* chargeCurrent         (void) { return &_chargeCurrentFact; }
+    Fact* rpm         (void) { return &_rpmFact; }
+    Fact* iceTemp         (void) { return &_iceTempFact; }
+    Fact* genTemp    (void) { return &_genTempFact; }
+    Fact* fuelRemaining    (void) { return &_fuelRemainingFact; }
+    Fact* cooler    (void) { return &_coolerFact; }
+    Fact* starter    (void) { return &_starterFact; }
+    Fact* throttle    (void) { return &_throttleFact; }
+
+    static const char* _chargeCurrentFactName;
+    static const char* _rpmFactName;
+    static const char* _iceTempFactName;
+    static const char* _genTempFactName;
+    static const char* _fuelRemainingFactName;
+    static const char* _coolerFactName;
+    static const char* _starterFactName;
+    static const char* _throttleFactName;
+
+private:
+    Fact        _chargeCurrentFact;
+    Fact        _rpmFact;
+    Fact        _iceTempFact;
+    Fact        _genTempFact;
+    Fact        _fuelRemainingFact;
+    Fact        _coolerFact;
+    Fact        _starterFact;
+    Fact        _throttleFact;
+};
+
 class VehicleWindFactGroup : public FactGroup
 {
     Q_OBJECT
@@ -663,6 +708,7 @@ public:
     Q_PROPERTY(FactGroup* battery2          READ battery2FactGroup          CONSTANT)
     Q_PROPERTY(FactGroup* wind              READ windFactGroup              CONSTANT)
     Q_PROPERTY(FactGroup* vibration         READ vibrationFactGroup         CONSTANT)
+    Q_PROPERTY(FactGroup* ice               READ ICEFactGroup               CONSTANT)
     Q_PROPERTY(FactGroup* temperature       READ temperatureFactGroup       CONSTANT)
     Q_PROPERTY(FactGroup* clock             READ clockFactGroup             CONSTANT)
     Q_PROPERTY(FactGroup* setpoint          READ setpointFactGroup          CONSTANT)
@@ -951,6 +997,7 @@ public:
     FactGroup* battery1FactGroup        (void) { return &_battery1FactGroup; }
     FactGroup* battery2FactGroup        (void) { return &_battery2FactGroup; }
     FactGroup* windFactGroup            (void) { return &_windFactGroup; }
+    FactGroup* ICEFactGroup             (void) { return &_ICEFactGroup; }
     FactGroup* vibrationFactGroup       (void) { return &_vibrationFactGroup; }
     FactGroup* temperatureFactGroup     (void) { return &_temperatureFactGroup; }
     FactGroup* clockFactGroup           (void) { return &_clockFactGroup; }
@@ -1214,6 +1261,7 @@ private:
     void _handleSysStatus(mavlink_message_t& message);
     void _handleWindCov(mavlink_message_t& message);
     void _handleVibration(mavlink_message_t& message);
+    void _handleICE(mavlink_message_t& message);
     void _handleExtendedSysState(mavlink_message_t& message);
     void _handleCommandAck(mavlink_message_t& message);
     void _handleCommandLong(mavlink_message_t& message);
@@ -1459,6 +1507,7 @@ private:
     VehicleBatteryFactGroup         _battery1FactGroup;
     VehicleBatteryFactGroup         _battery2FactGroup;
     VehicleWindFactGroup            _windFactGroup;
+    VehicleICEFactGroup             _ICEFactGroup;
     VehicleVibrationFactGroup       _vibrationFactGroup;
     VehicleTemperatureFactGroup     _temperatureFactGroup;
     VehicleClockFactGroup           _clockFactGroup;
@@ -1486,6 +1535,7 @@ private:
     static const char* _battery1FactGroupName;
     static const char* _battery2FactGroupName;
     static const char* _windFactGroupName;
+    static const char* _ICEFactGroupName;
     static const char* _vibrationFactGroupName;
     static const char* _temperatureFactGroupName;
     static const char* _clockFactGroupName;

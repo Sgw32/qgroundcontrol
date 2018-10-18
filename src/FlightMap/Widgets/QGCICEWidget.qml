@@ -29,9 +29,14 @@ Item {
     property var  vehicle:      null
     property real size
     property bool showHeading:  false
+    property bool temperature_widget:  true
 
     property real _rollAngle:   vehicle ? vehicle.roll.rawValue  : 0
     property real _pitchAngle:  vehicle ? vehicle.pitch.rawValue : 0
+
+    property real _iceTemp:   vehicle ? vehicle.ice.iceTemp.rawValue  : 0
+    property real _genTemp:  vehicle ? vehicle.ice.genTemp.rawValue : 0
+    property real _rpm:  vehicle ? vehicle.ice.rpm.rawValue : 0
 
     width:  size
     height: size
@@ -42,14 +47,6 @@ Item {
         id:             instrument
         anchors.fill:   parent
         visible:        false
-
-        //----------------------------------------------------
-        //-- Artificial Horizon
-        QGCArtificialHorizon {
-            rollAngle:          _rollAngle
-            pitchAngle:         _pitchAngle
-            anchors.fill:       parent
-        }
         //----------------------------------------------------
         //-- Pointer
         Image {
@@ -59,6 +56,26 @@ Item {
             fillMode:           Image.PreserveAspectFit
             anchors.fill:       parent
             sourceSize.height:  parent.height
+            transform: Rotation {
+                origin.x:       root.width  / 2
+                origin.y:       root.height / 2
+                angle:          temperature_widget ? -45+_iceTemp/200*90 : -45+_rpm/9000*90
+            }
+        }
+        //-- Pointer2
+        Image {
+            id:                 pointer2
+            source:             "/qmlimages/attitudePointer.svg"
+            mipmap:             true
+            fillMode:           Image.PreserveAspectFit
+            anchors.fill:       parent
+            sourceSize.height:  parent.height
+            visible:        temperature_widget
+            transform: Rotation {
+                origin.x:       root.width  / 2
+                origin.y:       root.height / 2
+                angle:          45-_genTemp/200*90-180
+            }
         }
         //----------------------------------------------------
         //-- Instrument Dial
@@ -69,15 +86,25 @@ Item {
             fillMode:           Image.PreserveAspectFit
             anchors.fill:       parent
             sourceSize.height:  parent.height
+        }
+        //-- Instrument Dial2
+        Image {
+            id:                 instrumentDial2
+            source:             "/qmlimages/attitudeDial.svg"
+            mipmap:             true
+            fillMode:           Image.PreserveAspectFit
+            anchors.fill:       parent
+            sourceSize.height:  parent.height
             transform: Rotation {
                 origin.x:       root.width  / 2
                 origin.y:       root.height / 2
-                angle:          -_rollAngle
+                angle:          -180
             }
+            visible:        temperature_widget
         }
         //----------------------------------------------------
         //-- Pitch
-        QGCPitchIndicator {
+        /*QGCPitchIndicator {
             id:                 pitchWidget
             visible:            root.showPitch
             size:               root.size * 0.5
@@ -85,18 +112,7 @@ Item {
             pitchAngle:         _pitchAngle
             rollAngle:          _rollAngle
             color:              Qt.rgba(0,0,0,0)
-        }
-        //----------------------------------------------------
-        //-- Cross Hair
-        Image {
-            id:                 crossHair
-            anchors.centerIn:   parent
-            source:             "/qmlimages/crossHair.svg"
-            mipmap:             true
-            width:              size * 0.75
-            sourceSize.width:   width
-            fillMode:           Image.PreserveAspectFit
-        }
+        }*/
     }
 
     Rectangle {
