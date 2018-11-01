@@ -2049,6 +2049,66 @@ void MissionController::setCurrentPlanViewIndex(int sequenceNumber, bool force)
     }
 }
 
+void MissionController::swapUpCurrentPlanViewIndex(int sequenceNumber)
+{
+    int sN = sequenceNumber;
+    if (sequenceNumber <= 0 || sequenceNumber >= _visualItems->count()) {
+        qWarning() << "MissionController::swapUpCurrentPlanViewIndex called with bad index - count:index" << _visualItems->count() << sequenceNumber;
+        return;
+    }
+    if(_visualItems) {
+        for (int i = 1; i < _visualItems->count(); i++) {
+            VisualMissionItem* prevVI = qobject_cast<VisualMissionItem*>(_visualItems->get(i-1));
+            //VisualMissionItem* pVI = qobject_cast<VisualMissionItem*>(_visualItems->get(i));
+            VisualMissionItem* pVI = qobject_cast<VisualMissionItem*>(_visualItems->get(i));
+            if (prevVI && pVI->sequenceNumber() == sequenceNumber) {
+                pVI = qobject_cast<VisualMissionItem*>(_visualItems->removeAt(i));
+                _visualItems->insert(sequenceNumber-1, pVI);
+                break;
+            }
+            /*if (prevVI && pVI->sequenceNumber() == sequenceNumber) {
+                 _visualItems->swap(i,i-1);
+            }*/
+        }
+        emit currentPlanViewIndexChanged();
+        emit currentPlanViewItemChanged();
+        emit visualItemsChanged();
+    }
+    _recalcAll();
+    setDirty(true);
+    //setCurrentPlanViewIndex(3,true);
+}
+
+void MissionController::swapDownCurrentPlanViewIndex(int sequenceNumber)
+{
+    int sN = sequenceNumber;
+    if (sequenceNumber <= 0 || sequenceNumber >= _visualItems->count()) {
+        qWarning() << "MissionController::swapUpCurrentPlanViewIndex called with bad index - count:index" << _visualItems->count() << sequenceNumber;
+        return;
+    }
+    if(_visualItems) {
+        for (int i = 0; i < _visualItems->count()-1; i++) {
+            VisualMissionItem* prevVI = qobject_cast<VisualMissionItem*>(_visualItems->get(i+1));
+            VisualMissionItem* pVI = qobject_cast<VisualMissionItem*>(_visualItems->get(i));
+            if (prevVI && pVI->sequenceNumber() == sequenceNumber) {
+                pVI = qobject_cast<VisualMissionItem*>(_visualItems->removeAt(i));
+                _visualItems->insert(sequenceNumber+1, pVI);
+            }
+            /*VisualMissionItem* pVI = qobject_cast<VisualMissionItem*>(_visualItems->get(i));
+
+                 _visualItems->swap(i,i+1);
+            }*/
+        }
+        emit currentPlanViewIndexChanged();
+        emit currentPlanViewItemChanged();
+        emit visualItemsChanged();
+    }
+    _recalcAll();
+    setDirty(true);
+    //setCurrentPlanViewIndex(3,true);
+}
+
+
 void MissionController::_updateTimeout()
 {
     QGeoCoordinate firstCoordinate;

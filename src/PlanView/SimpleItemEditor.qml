@@ -82,12 +82,18 @@ Rectangle {
             }
         }
 
+        SectionHeader {
+            id:             altSectionHeader
+            text:           qsTr("Altitude")
+            checked:        false
+        }
+
         Rectangle {
             anchors.left:   parent.left
             anchors.right:  parent.right
             height:         altColumn.y + altColumn.height + _margin
             color:          qgcPal.windowShade
-            visible:        _specifiesAltitude
+            visible:        _specifiesAltitude && altSectionHeader.checked
 
             Column {
                 id:                 altColumn

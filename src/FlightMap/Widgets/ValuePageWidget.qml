@@ -29,6 +29,8 @@ Column {
 
     property var    _activeVehicle: QGroundControl.multiVehicleManager.activeVehicle ? QGroundControl.multiVehicleManager.activeVehicle : QGroundControl.multiVehicleManager.offlineEditingVehicle
     property real   _margins:       ScreenTools.defaultFontPixelWidth / 2
+    property real   _defaultSize:       ScreenTools.defaultFontPixelHeight * (9)
+    property real   _sizeRatio:         ScreenTools.isTinyScreen ? (width / _defaultSize) * 0.5 : width / _defaultSize
 
     QGCPalette { id:qgcPal; colorGroupEnabled: true }
 
@@ -107,7 +109,7 @@ Column {
                 width:                  parent.width
                 wrapMode:               Text.WordWrap
                 horizontalAlignment:    Text.AlignHCenter
-                font.pointSize:         ScreenTools.isTinyScreen ? ScreenTools.smallFontPointSize * 0.75 : ScreenTools.smallFontPointSize
+                font.pointSize:         ScreenTools.defaultFontPointSize * 0.75 * _sizeRatio//ScreenTools.isTinyScreen ? ScreenTools.normalFontFamily * 0.75 : ScreenTools.normalFontFamily
                 text:                   fact.shortDescription
             }
             QGCLabel {
@@ -115,11 +117,12 @@ Column {
                 horizontalAlignment:    Text.AlignHCenter
                 fontSizeMode:           Text.HorizontalFit
                 text:                   fact.enumOrValueString
+                font.pointSize:         ScreenTools.defaultFontPointSize * 0.75 * _sizeRatio
             }
             QGCLabel {
                 width:                  parent.width
                 horizontalAlignment:    Text.AlignHCenter
-                font.pointSize:         ScreenTools.isTinyScreen ? ScreenTools.smallFontPointSize * 0.75 : ScreenTools.smallFontPointSize
+                font.pointSize:         ScreenTools.defaultFontPointSize * 0.75 * _sizeRatio//ScreenTools.isTinyScreen ? ScreenTools.normalFontFamily * 0.75 : ScreenTools.normalFontFamily
                 fontSizeMode:           Text.HorizontalFit
                 text:                   fact.units
             }

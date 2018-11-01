@@ -19,15 +19,15 @@ import QGroundControl.Palette       1.0
 
 Rectangle {
     id:             root
-    width:          getPreferredInstrumentWidth()*1.5
-    height:         _outerRadius * 2
-    radius:         _outerRadius
+    width:          getPreferredInstrumentWidth()*1.4
+    height:         getPreferredInstrumentWidth()*1.7
+    radius:         getPreferredInstrumentWidth()*1.8
     color:          qgcPal.window
     border.width:   1
     border.color:   _isSatellite ? qgcPal.mapWidgetBorderLight : qgcPal.mapWidgetBorderDark
 
     property var    _qgcView:           qgcView
-    property real   _innerRadius:       (width - (_topBottomMargin * 3)) / 4
+    property real   _innerRadius:       (width - (_topBottomMargin * 3)) / 3
     property real   _outerRadius:       _innerRadius + _topBottomMargin
     property real   _defaultSize:       ScreenTools.defaultFontPixelHeight * (9)
     property real   _sizeRatio:         ScreenTools.isTinyScreen ? (width / _defaultSize) * 0.5 : width / _defaultSize
@@ -39,6 +39,23 @@ Rectangle {
     property real   _availableValueHeight: maxHeight - (root.height + _valuesItem.anchors.topMargin)
     property var    _activeVehicle:     QGroundControl.multiVehicleManager.activeVehicle
 
+    /*property real _altitude:  _activeVehicle ? _activeVehicle.altitudeRelative.rawValue : 0
+    property real _desiredAltitude:  _activeVehicle ? _activeVehicle.altitudeRelative.rawValue : 0
+    property real _airSpeed:  _activeVehicle ? _activeVehicle.airSpeed.rawValue : 0
+    property real _groundSpeed:  _activeVehicle ? _activeVehicle.groundSpeed.rawValue : 0
+    property int _percent:  _activeVehicle ? _activeVehicle.battery.percentRemaining.rawValue : 0
+    property real _voltage:  _activeVehicle ? _activeVehicle.battery.voltage.rawValue : 0
+    property real _current:  _activeVehicle ? _activeVehicle.battery.current.rawValue : 0
+*/
+
+    property real _altitudeS:  _activeVehicle ? _activeVehicle.altitudeRelative.valueString : 0
+    property real _desiredAltitudeS:  _activeVehicle ? _activeVehicle.altitudeRelative.valueString : 0
+    property real _airSpeedS:  _activeVehicle ? _activeVehicle.airSpeed.valueString : 0
+    property real _groundSpeedS:  _activeVehicle ? _activeVehicle.groundSpeed.valueString : 0
+    property int _percentS:  _activeVehicle ? _activeVehicle.battery.percentRemaining.valueString : 0
+    property real _voltageS:  _activeVehicle ? _activeVehicle.battery.voltage.valueString : 0
+    property real _currentS:  _activeVehicle ? _activeVehicle.battery.current.valueString : 0
+
     // Prevent all clicks from going through to lower layers
     DeadMouseArea {
         anchors.fill: parent
@@ -48,20 +65,70 @@ Rectangle {
 
     QGCAttitudeWidget {
         id:                 attitude
-        anchors.leftMargin: _topBottomMargin
-        anchors.left:       parent.left
-        size:               _innerRadius * 2
+        anchors.top:        root.top
+        anchors.topMargin:  ScreenTools.defaultFontPixelHeight*3
+        //anchors.leftMargin: _topBottomMargin
+        //anchors.left:       parent.left
+        size:               _innerRadius * 2.4
         vehicle:            _activeVehicle
-        anchors.verticalCenter: parent.verticalCenter
+        //anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter:   parent.horizontalCenter
+    }
+
+    QGCLabel {
+        id:                 altitude_att
+        anchors.left:        attitude.right
+        anchors.leftMargin:  ScreenTools.defaultFontPixelHeight / 4
+        anchors.verticalCenter: attitude.verticalCenter
+        wrapMode:               Text.WordWrap
+        text:                   _altitudeS //"T1"
+        font.pointSize:         _labelFontSize
+        font.family:            ScreenTools.demiboldFontFamily
+    }
+
+    QGCLabel {
+        id:                 aspd_att
+        anchors.right:        attitude.left
+        anchors.rightMargin:  ScreenTools.defaultFontPixelHeight / 4
+        anchors.verticalCenter: attitude.verticalCenter
+        wrapMode:               Text.WordWrap
+        text:                   _airSpeedS //"T2"
+        font.pointSize:         _labelFontSize
+        font.family:            ScreenTools.demiboldFontFamily
+    }
+
+    QGCLabel {
+        id:                 asgs_att
+        anchors.top:        attitude.bottom
+        anchors.topMargin:  ScreenTools.defaultFontPixelHeight / 4
+        anchors.rightMargin: 50
+        anchors.right: attitude.horizontalCenter
+        //wrapMode:               Text.WordWrap
+        text:                   "AS" + _airSpeedS + "\nGS" +_groundSpeedS
+        font.pointSize:         _labelFontSize
+        font.family:            ScreenTools.demiboldFontFamily
+    }
+
+    QGCLabel {
+        id:                 batt_att
+        anchors.top:        attitude.bottom
+        anchors.topMargin:  ScreenTools.defaultFontPixelHeight / 4
+        anchors.leftMargin:  50
+        anchors.left: attitude.horizontalCenter
+        //wrapMode:               Text.WordWrap
+        text:                   _voltageS
+        font.pointSize:         _labelFontSize
+        font.family:            ScreenTools.demiboldFontFamily
     }
 
     QGCCompassWidget {
         id:                 compass
         anchors.leftMargin: _spacing
-        anchors.left:       attitude.right
-        size:               _innerRadius * 2
+        anchors.topMargin:  ScreenTools.defaultFontPixelHeight / 2
+        anchors.top:       attitude.bottom
+        size:               _innerRadius / 1.3
         vehicle:            _activeVehicle
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter:   parent.horizontalCenter
     }
 
     Item {
@@ -105,7 +172,7 @@ Rectangle {
             anchors.topMargin:  ScreenTools.defaultFontPixelHeight / 4
             anchors.top:        parent.bottom
             anchors.horizontalCenter:   parent.horizontalCenter
-            height:                     _outerRadius * 4
+            height:                     _innerRadius*2+80//_outerRadius * 4
             width:                      parent.width
             color:                      qgcPal.window
 
@@ -115,7 +182,7 @@ Rectangle {
                 anchors.leftMargin: _topBottomMargin
                 anchors.left:       parent.left
                 anchors.top:        parent.top
-                size:               _innerRadius * 2
+                size:               (parent.width - (_topBottomMargin*2)) / 2
                 vehicle:            _activeVehicle
                 //anchors.verticalCenter: parent.verticalCenter
             }
@@ -126,47 +193,55 @@ Rectangle {
                 anchors.leftMargin: _topBottomMargin
                 anchors.left:       icew.right
                 anchors.top:        parent.top
-                size:               _innerRadius * 2
+                size:               (parent.width - (_topBottomMargin*2)) / 2
                 vehicle:            _activeVehicle
                 temperature_widget: false
                 //anchors.verticalCenter: parent.verticalCenter
             }
 
             QGCLabel {
+                id:                 rpmlabel
                 width:                  parent.width
+                anchors.top:        icew.bottom
+                anchors.topMargin:  ScreenTools.defaultFontPixelHeight / 4
                 horizontalAlignment:    Text.AlignHCenter
                 wrapMode:               Text.WordWrap
                 text:                   _activeVehicle ? "RPM: " + _activeVehicle.ice.rpm.enumOrValueString : "RPM: 0"
-                font.pointSize:         ScreenTools.mediumFontPointSize * 2
+                font.pointSize:         _labelFontSize
                 font.family:            ScreenTools.demiboldFontFamily
-                y: _innerRadius*2+10
             }
             QGCLabel {
+                id:                 icetlabel
                 width:                  parent.width
+                anchors.top:        rpmlabel.bottom
+                anchors.topMargin:  ScreenTools.defaultFontPixelHeight / 4
                 horizontalAlignment:    Text.AlignHCenter
                 wrapMode:               Text.WordWrap
-                text:                   _activeVehicle ? "ICE t.: " + _activeVehicle.ice.iceTemp.enumOrValueString : "ICE t.: 0"
-                font.pointSize:         ScreenTools.mediumFontPointSize * 2
+                text:                   _activeVehicle ? "ICE Temp: " + _activeVehicle.ice.iceTemp.enumOrValueString : "ICE Temp: 0"
+                font.pointSize:         _labelFontSize
                 font.family:            ScreenTools.demiboldFontFamily
-                y: _innerRadius*2+40
             }
             QGCLabel {
+                id:                 gentlabel
                 width:                  parent.width
+                anchors.top:        icetlabel.bottom
+                anchors.topMargin:  ScreenTools.defaultFontPixelHeight / 4
                 horizontalAlignment:    Text.AlignHCenter
                 wrapMode:               Text.WordWrap
-                text:                   _activeVehicle ? "Gen.: T " + _activeVehicle.ice.genTemp.enumOrValueString : "Gen. T: 0"
-                font.pointSize:         ScreenTools.mediumFontPointSize * 2
+                text:                   _activeVehicle ? "Gen Temp: " + _activeVehicle.ice.genTemp.enumOrValueString : "Gen Temp: 0"
+                font.pointSize:         _labelFontSize
                 font.family:            ScreenTools.demiboldFontFamily
-                y: _innerRadius*2+70
             }
             QGCLabel {
+                id:                 chargelabel
                 width:                  parent.width
+                anchors.top:        gentlabel.bottom
+                anchors.topMargin:  ScreenTools.defaultFontPixelHeight / 4
                 horizontalAlignment:    Text.AlignHCenter
                 wrapMode:               Text.WordWrap
-                text:                   _activeVehicle ? "Curr.: " + _activeVehicle.ice.chargeCurrent.enumOrValueString : "Curr.: 0"
-                font.pointSize:         ScreenTools.mediumFontPointSize * 2
+                text:                   _activeVehicle ? "Charge: " + _activeVehicle.ice.chargeCurrent.enumOrValueString : "Charge: 0"
+                font.pointSize:         _labelFontSize
                 font.family:            ScreenTools.demiboldFontFamily
-                y: _innerRadius*2+100
             }
 
             /*ProgressBar {

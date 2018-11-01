@@ -52,10 +52,13 @@ Item {
     readonly property string setWaypointTitle:              qsTr("Set Waypoint")
     readonly property string gotoTitle:                     qsTr("Goto Location")
     readonly property string vtolTransitionTitle:           qsTr("VTOL Transition")
+    readonly property string rebootTitle:                   qsTr("Reboot vehicle")
+    readonly property string calibrateTitle:           qsTr("Calibrate vehicle")
+    readonly property string doEngineControlTitle:           qsTr("Engine control")
 
     readonly property string armMessage:                        qsTr("Arm the vehicle.")
     readonly property string disarmMessage:                     qsTr("Disarm the vehicle")
-    readonly property string emergencyStopMessage:              qsTr("WARNING: THIS WILL STOP ALL MOTORS. IF VEHICLE IS CURRENTLY IN THE AIR IT WILL CRASH.")
+    readonly property string emergencyStopMessage:              qsTr("WARNING: THIS WILL STOP ALL MOTORS. IF VEHICLE IS CURRENTLY IN THE AIR IT WILL CRASH.")    
     readonly property string takeoffMessage:                    qsTr("Takeoff from ground and hold position.")
     readonly property string startMissionMessage:               qsTr("Takeoff from ground and start the current mission.")
     readonly property string continueMissionMessage:            qsTr("Continue the mission from the current waypoint.")
@@ -73,6 +76,9 @@ Item {
     readonly property string mvPauseMessage:                    qsTr("Pause all vehicles at their current position.")
     readonly property string vtolTransitionFwdMessage:          qsTr("Transition VTOL to fixed wing flight.")
     readonly property string vtolTransitionMRMessage:           qsTr("Transition VTOL to multi-rotor flight.")
+    readonly property string rebootMessage:                     qsTr("WARNING: REBOOT WILL STOP ALL MOTORS. IF VEHICLE IS CURRENTLY IN THE AIR IT WILL CRASH.")
+    readonly property string calibrateMessage:                  qsTr("Preflight calibration.")
+    readonly property string doEngineControlMessage:                  qsTr("Engine start/stop .")
 
     readonly property int actionRTL:                        1
     readonly property int actionLand:                       2
@@ -95,6 +101,9 @@ Item {
     readonly property int actionMVStartMission:             19
     readonly property int actionVtolTransitionToFwdFlight:  20
     readonly property int actionVtolTransitionToMRFlight:   21
+    readonly property int actionReboot:   22
+    readonly property int actionCalibrate:   23
+    readonly property int actionDoEngineControl:   24
 
     property bool showEmergenyStop:     _guidedActionsEnabled && !_hideEmergenyStop && _vehicleArmed && _vehicleFlying
     property bool showArm:              _guidedActionsEnabled && !_vehicleArmed
@@ -335,6 +344,21 @@ Item {
             confirmDialog.message = vtolTransitionMRMessage
             confirmDialog.hideTrigger = true
             break
+        case actionReboot:
+            confirmDialog.title = rebootTitle
+            confirmDialog.message = rebootMessage
+            confirmDialog.hideTrigger = true
+            break
+        case actionCalibrate:
+            confirmDialog.title = calibrateTitle
+            confirmDialog.message = calibrateMessage
+            confirmDialog.hideTrigger = true
+            break
+        case actionDoEngineControl:
+            confirmDialog.title = doEngineControlTitle
+            confirmDialog.message = doEngineControlMessage
+            confirmDialog.hideTrigger = true
+            break
         default:
             console.warn("Unknown actionCode", actionCode)
             return
@@ -414,6 +438,15 @@ Item {
             break
         case actionVtolTransitionToMRFlight:
             _activeVehicle.vtolInFwdFlight = false
+            break
+        case actionReboot:
+            _activeVehicle.rebootVehicle()
+            break
+        case actionCalibrate:
+            _activeVehicle.calibrateVehicle()
+            break
+        case actionDoEngineControl:
+            _activeVehicle.doEngineControl()
             break
         default:
             console.warn(qsTr("Internal error: unknown actionCode"), actionCode)

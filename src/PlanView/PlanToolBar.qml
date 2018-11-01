@@ -13,6 +13,8 @@ import QGroundControl.Palette           1.0
 Rectangle {
     id:                 _root
     height:             ScreenTools.toolbarHeight
+    anchors.rightMargin:    300;
+    anchors.leftMargin:    300;
     anchors.left:       parent.left
     anchors.right:      parent.right
     anchors.top:        parent.top
@@ -84,13 +86,13 @@ Rectangle {
     }
 
     //-- Eat mouse events, preventing them from reaching toolbar, which is underneath us.
-    DeadMouseArea {
+    /*DeadMouseArea {
         anchors.fill: parent
-    }
+    }*/
 
     //-- The reason for this Row to be here is so the Logo (Home) button is in the same
     //   location as the one in the main toolbar.
-    Row {
+    /*Row {
         id:                     logoRow
         anchors.bottomMargin:   1
         anchors.left:           parent.left
@@ -108,6 +110,14 @@ Rectangle {
                 showFlyView()
             }
         }
+    }*/
+
+    Row {
+            id:                     logoRow
+            anchors.bottomMargin:   1
+            anchors.left:           parent.left
+            anchors.top:            parent.top
+            anchors.bottom:         parent.bottom
     }
 
     // Progress bar

@@ -588,6 +588,7 @@ public:
     Q_PROPERTY(bool                 autoDisarm              READ autoDisarm                                             NOTIFY autoDisarmChanged)
     Q_PROPERTY(bool                 flightModeSetAvailable  READ flightModeSetAvailable                                 CONSTANT)
     Q_PROPERTY(QStringList          flightModes             READ flightModes                                            NOTIFY flightModesChanged)
+    Q_PROPERTY(QStringList          commandList             READ commandList                                            CONSTANT)
     Q_PROPERTY(QString              flightMode              READ flightMode             WRITE setFlightMode             NOTIFY flightModeChanged)
     Q_PROPERTY(bool                 hilMode                 READ hilMode                WRITE setHilMode                NOTIFY hilModeChanged)
     Q_PROPERTY(QmlObjectListModel*  trajectoryPoints        READ trajectoryPoints                                       CONSTANT)
@@ -784,6 +785,12 @@ public:
     /// Reboot vehicle
     Q_INVOKABLE void rebootVehicle();
 
+    /// Calibrate (e.g. airspeed) on vehicle
+    Q_INVOKABLE void calibrateVehicle();
+
+    /// Reboot vehicle
+    Q_INVOKABLE void doEngineControl();
+
     /// Clear Messages
     Q_INVOKABLE void clearMessages();
 
@@ -867,6 +874,8 @@ public:
 
     bool armed(void) { return _armed; }
     void setArmed(bool armed);
+
+    QStringList commandList(void);
 
     bool flightModeSetAvailable(void);
     QStringList flightModes(void);

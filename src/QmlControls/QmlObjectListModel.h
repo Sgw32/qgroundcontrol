@@ -29,6 +29,8 @@ public:
 
     Q_INVOKABLE QObject* get(int index)     { return _objectList[index]; }
 
+    Q_INVOKABLE void swap(int index1,int index2)     { return _objectList.swap(index1,index2); }
+
     // Property accessors
     
     int         count               () const;

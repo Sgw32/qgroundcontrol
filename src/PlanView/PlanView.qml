@@ -809,6 +809,71 @@ QGCView {
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
                             }
+                            Column {
+                                id:                     expandedCol2
+                                spacing:                ScreenTools.defaultFontPixelHeight * 0.5
+                                anchors.left:           parent.left
+                                anchors.right:          parent.right
+                                //-- Header
+                                Row {
+                                    id:                     expandedRow2
+                                    spacing:                ScreenTools.defaultFontPixelWidth
+                                    anchors.left:           parent.left
+                                    anchors.leftMargin:     ScreenTools.defaultFontPixelWidth
+                                    readonly property real _buttonRadius: ScreenTools.defaultFontPixelHeight * 0.75
+                                    QGCColoredImage {
+                                        width:                  height
+                                        height:                 ScreenTools.defaultFontPixelWidth * 2.5
+                                        sourceSize.height:      height
+                                        source:                 "qrc:/res/waypoint.svg"
+                                        color:                  qgcPal.text
+                                        anchors.verticalCenter: parent.verticalCenter
+                                    }
+                                    QGCLabel {
+                                        text:           qsTr("Plan")
+                                        color:          qgcPal.text
+                                        visible:        !QGroundControl.corePlugin.options.enablePlanViewSelector
+                                        anchors.verticalCenter: parent.verticalCenter
+                                    }
+
+                                    QGCButton {
+                                        text:               "Delete"
+                                        Layout.fillWidth:   true
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        onClicked: {
+                                            var removeIndex = _missionController.currentPlanViewIndex;
+                                            _missionController.removeMissionItem(removeIndex)
+                                            if (removeIndex >= _missionController.visualItems.count) {
+                                                removeIndex--
+                                            }
+                                            _missionController.setCurrentPlanViewIndex(removeIndex, true)
+                                        }
+                                    }
+                                    QGCButton {
+                                        text:               ""
+                                        iconSource: "qrc:/res/chevron-down.svg"
+                                        Layout.fillWidth:   true
+                                        anchors.verticalCenter: parent.verticalCenter
+
+                                        onClicked: {
+                                            var rIndex = _missionController.currentPlanViewIndex;
+                                            _missionController.swapDownCurrentPlanViewIndex(rIndex);
+                                            _missionController.setCurrentPlanViewIndex(rIndex+1, true)
+                                        }
+                                    }
+                                    QGCButton {
+                                        text:               ""
+                                         iconSource: "qrc:/res/chevron-up.svg"
+                                        Layout.fillWidth:   true
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        onClicked: {
+                                            var rIndex = _missionController.currentPlanViewIndex;
+                                            _missionController.swapUpCurrentPlanViewIndex(rIndex);
+                                            _missionController.setCurrentPlanViewIndex(rIndex-1, true)
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }

@@ -36,6 +36,9 @@ Rectangle {
     signal disarmVehicle
     signal vtolTransitionToFwdFlight
     signal vtolTransitionToMRFlight
+    signal reboot
+    signal calibrate
+    signal doEngineControl
 
     function checkSettingsButton() {
         settingsButton.checked = true

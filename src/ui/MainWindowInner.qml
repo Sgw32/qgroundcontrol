@@ -107,6 +107,10 @@ Item {
         hideAllViews()
         planViewLoader.visible = true
         planToolBar.visible = true
+
+       // hideAllViews()
+       // flightView.visible = true
+        toolBar.checkPlanButton()
     }
 
     function showFlyView() {
@@ -275,7 +279,7 @@ Item {
         anchors.left:       parent.left
         anchors.right:      parent.right
         anchors.top:        parent.top
-        opacity:            planToolBar.visible ? 0 : 1
+        opacity:            1 //planToolBar.visible ? 0 : 1
         z:                  QGroundControl.zOrderTopMost
 
         Component.onCompleted:  ScreenTools.availableHeight = parent.height - toolBar.height
@@ -294,6 +298,9 @@ Item {
         }
         onVtolTransitionToFwdFlight:    flightView.guidedController.confirmAction(flightView.guidedController.actionVtolTransitionToFwdFlight)
         onVtolTransitionToMRFlight:     flightView.guidedController.confirmAction(flightView.guidedController.actionVtolTransitionToMRFlight)
+        onReboot:           flightView.guidedController.confirmAction(flightView.guidedController.actionReboot)
+        onCalibrate:           flightView.guidedController.confirmAction(flightView.guidedController.actionCalibrate)
+        onDoEngineControl:           flightView.guidedController.confirmAction(flightView.guidedController.actionDoEngineControl)
 
         //-- Entire tool bar area disable on cammand
         DeadMouseArea {
@@ -308,8 +315,8 @@ Item {
         height:             ScreenTools.toolbarHeight
         anchors.left:       parent.left
         anchors.right:      parent.right
-        anchors.top:        parent.top
-        z:                  toolBar.z + 1
+        anchors.top:        toolBar.bottom
+        z:                  20
 
         onShowFlyView: {
             planToolBar.visible = false

@@ -33,6 +33,10 @@ Item {
     property real _rollAngle:   vehicle ? vehicle.roll.rawValue  : 0
     property real _pitchAngle:  vehicle ? vehicle.pitch.rawValue : 0
 
+    //property real _altitude:  vehicle ? vehicle.pitch.rawValue : 0
+    //property real _airSpeed:  vehicle ? vehicle.pitch.rawValue : 0
+    //property real _groundSpeed:  vehicle ? vehicle.pitch.rawValue : 0
+
     width:  size
     height: size
 
@@ -106,6 +110,7 @@ Item {
 
             QGCLabel {
                 text:               vehicle.armed ? qsTr("ARMED") : qsTr("DISARMED\n")
+                anchors.bottomMargin:       1
                 font.family:        vehicle ? ScreenTools.demiboldFontFamily : ScreenTools.normalFontFamily
                 font.pointSize:     12
                 color:              "red"

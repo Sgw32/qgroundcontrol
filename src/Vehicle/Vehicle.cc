@@ -2267,6 +2267,15 @@ QStringList Vehicle::flightModes(void)
     return _firmwarePlugin->flightModes(this);
 }
 
+QStringList Vehicle::commandList(void)
+{
+    QStringList cmdList;
+    cmdList << "Engine control";
+    cmdList << "Calibrate";
+    cmdList << "Reboot";
+    return cmdList;
+}
+
 QString Vehicle::flightMode(void) const
 {
     return _firmwarePlugin->flightMode(_base_mode, _custom_mode);
@@ -3308,6 +3317,16 @@ void Vehicle::rebootVehicle()
 {
     _autoDisconnect = true;
     sendMavCommand(_defaultComponentId, MAV_CMD_PREFLIGHT_REBOOT_SHUTDOWN, true, 1.0f);
+}
+
+void Vehicle::calibrateVehicle()
+{
+    sendMavCommand(_defaultComponentId, MAV_CMD_PREFLIGHT_CALIBRATION, true, 1.0f);
+}
+
+void Vehicle::doEngineControl()
+{
+    sendMavCommand(_defaultComponentId, MAV_CMD_DO_ENGINE_CONTROL, true, 1.0f);
 }
 
 void Vehicle::setSoloFirmware(bool soloFirmware)

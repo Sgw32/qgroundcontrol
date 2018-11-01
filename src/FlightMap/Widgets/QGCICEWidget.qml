@@ -38,6 +38,10 @@ Item {
     property real _genTemp:  vehicle ? vehicle.ice.genTemp.rawValue : 0
     property real _rpm:  vehicle ? vehicle.ice.rpm.rawValue : 0
 
+    property real _cooler:   vehicle ? vehicle.ice.cooler.rawValue  : 0
+    property real _starter:  vehicle ? vehicle.ice.starter.rawValue : 0
+    property real _throttle:  vehicle ? vehicle.ice.throttle.rawValue : 0
+
     width:  size
     height: size
 
@@ -59,7 +63,7 @@ Item {
             transform: Rotation {
                 origin.x:       root.width  / 2
                 origin.y:       root.height / 2
-                angle:          temperature_widget ? -45+_iceTemp/200*90 : -45+_rpm/9000*90
+                angle:          temperature_widget ? -45+_starter/100*90 : -45+_cooler/100*90
             }
         }
         //-- Pointer2
@@ -74,7 +78,8 @@ Item {
             transform: Rotation {
                 origin.x:       root.width  / 2
                 origin.y:       root.height / 2
-                angle:          45-_genTemp/200*90-180
+                //angle:          45-_genTemp/200*90-180
+                angle:          45-_throttle/100*90-180
             }
         }
         //----------------------------------------------------
