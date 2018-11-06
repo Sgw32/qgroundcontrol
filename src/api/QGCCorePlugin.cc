@@ -94,6 +94,7 @@ public:
     QGCOptions*  defaultOptions;
 
     QmlComponentInfo*   valuesPageWidgetInfo;
+    QmlComponentInfo*   ICEPageWidgetInfo;
     QmlComponentInfo*   cameraPageWidgetInfo;
     QmlComponentInfo*   videoPageWidgetInfo;
     QmlComponentInfo*   healthPageWidgetInfo;
@@ -173,6 +174,7 @@ QVariantList &QGCCorePlugin::settingsPages()
 QVariantList& QGCCorePlugin::instrumentPages(void)
 {
     if (!_p->valuesPageWidgetInfo) {
+        _p->ICEPageWidgetInfo    = new QmlComponentInfo(tr("ICE"),    QUrl::fromUserInput("qrc:/qml/QGroundControl/FlightMap/QGCICEWidget.qml"));
         _p->valuesPageWidgetInfo    = new QmlComponentInfo(tr("Values"),    QUrl::fromUserInput("qrc:/qml/ValuePageWidget.qml"));
         _p->cameraPageWidgetInfo    = new QmlComponentInfo(tr("Camera"),    QUrl::fromUserInput("qrc:/qml/CameraPageWidget.qml"));
 #if defined(QGC_GST_STREAMING)
@@ -181,7 +183,7 @@ QVariantList& QGCCorePlugin::instrumentPages(void)
         _p->healthPageWidgetInfo    = new QmlComponentInfo(tr("Health"),    QUrl::fromUserInput("qrc:/qml/HealthPageWidget.qml"));
         _p->vibrationPageWidgetInfo = new QmlComponentInfo(tr("Vibration"), QUrl::fromUserInput("qrc:/qml/VibrationPageWidget.qml"));
 
-        _p->instrumentPageWidgetList.append(QVariant::fromValue(_p->valuesPageWidgetInfo));
+        _p->instrumentPageWidgetList.append(QVariant::fromValue(_p->ICEPageWidgetInfo));
         _p->instrumentPageWidgetList.append(QVariant::fromValue(_p->cameraPageWidgetInfo));
         _p->instrumentPageWidgetList.append(QVariant::fromValue(_p->valuesPageWidgetInfo));
 #if defined(QGC_GST_STREAMING)
