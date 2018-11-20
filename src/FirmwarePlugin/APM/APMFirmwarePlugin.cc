@@ -440,19 +440,22 @@ bool APMFirmwarePlugin::_handleIncomingStatusText(Vehicle* vehicle, mavlink_mess
 void APMFirmwarePlugin::_handleIncomingHeartbeat(Vehicle* vehicle, mavlink_message_t* message)
 {
     bool flying = false;
-
+    mavlink_heartbeat_t heartbeat;
+    mavlink_msg_heartbeat_decode(message, &heartbeat);
     // We pull Vehicle::flying state from HEARTBEAT on ArduPilot. This is a firmware specific test.
 
-    if (vehicle->armed()) {
-        mavlink_heartbeat_t heartbeat;
-        mavlink_msg_heartbeat_decode(message, &heartbeat);
-
+    if (vehicle->armed()) {        
         flying = heartbeat.system_status == MAV_STATE_ACTIVE;
         if (!flying && vehicle->flying()) {
             // If we were previously flying, and we go into critical or emergency assume we are still flying
             flying = heartbeat.system_status == MAV_STATE_CRITICAL || heartbeat.system_status == MAV_STATE_EMERGENCY;
         }
     }
+
+    if (heartbeat.system_status == MAV_STATE_CRITICAL)
+        vehicle->_setFailsafeState(false);
+    else
+        vehicle->_setFailsafeState(true);
 
     vehicle->_setFlying(flying);
 }

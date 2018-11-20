@@ -118,6 +118,7 @@ Vehicle::Vehicle(LinkInterface*             link,
     , _rcRSSIstore(255.)
     , _autoDisconnect(false)
     , _flying(false)
+    , _failsafeState(false)
     , _landing(false)
     , _vtolInFwdFlight(false)
     , _onboardControlSensorsPresent(0)
@@ -321,6 +322,7 @@ Vehicle::Vehicle(MAV_AUTOPILOT              firmwareType,
     , _rcRSSIstore(255.)
     , _autoDisconnect(false)
     , _flying(false)
+    , _failsafeState(false)
     , _landing(false)
     , _vtolInFwdFlight(false)
     , _onboardControlSensorsPresent(0)
@@ -2861,6 +2863,14 @@ void Vehicle::_setFlying(bool flying)
     if (_flying != flying) {
         _flying = flying;
         emit flyingChanged(flying);
+    }
+}
+
+void Vehicle::_setFailsafeState(bool failsafeState)
+{
+    if (_failsafeState != failsafeState) {
+        _failsafeState = failsafeState;
+        emit failsafeStateChanged(failsafeState);
     }
 }
 

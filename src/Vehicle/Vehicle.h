@@ -678,6 +678,7 @@ public:
 
     // Vehicle state used for guided control
     Q_PROPERTY(bool flying                  READ flying NOTIFY flyingChanged)                               ///< Vehicle is flying
+    Q_PROPERTY(bool failsafeState           READ failsafeState NOTIFY failsafeStateChanged)                               ///< Vehicle is flying
     Q_PROPERTY(bool landing                 READ landing NOTIFY landingChanged)                             ///< Vehicle is in landing pattern (DO_LAND_START)
     Q_PROPERTY(bool guidedMode              READ guidedMode WRITE setGuidedMode NOTIFY guidedModeChanged)   ///< Vehicle is in Guided mode and can respond to guided commands
     Q_PROPERTY(bool guidedModeSupported     READ guidedModeSupported CONSTANT)                              ///< Guided mode commands are supported by this vehicle
@@ -952,6 +953,7 @@ public:
     uint            messagesSent            () { return _messagesSent; }
     uint            messagesLost            () { return _messagesLost; }
     bool            flying                  () const { return _flying; }
+    bool            failsafeState           () const { return _failsafeState; }
     bool            landing                 () const { return _landing; }
     bool            guidedMode              () const;
     bool            vtolInFwdFlight         () const { return _vtolInFwdFlight; }
@@ -1099,6 +1101,9 @@ public:
     void forceInitialPlanRequestComplete(void);
 
     void _setFlying(bool flying);
+
+    void _setFailsafeState(bool failsafeState);
+
     void _setLanding(bool landing);
     void setVtolInFwdFlight(bool vtolInFwdFlight);
     void _setHomePosition(QGeoCoordinate& homeCoord);
@@ -1129,6 +1134,7 @@ signals:
     void connectionLostEnabledChanged(bool connectionLostEnabled);
     void autoDisconnectChanged(bool autoDisconnectChanged);
     void flyingChanged(bool flying);
+    void failsafeStateChanged(bool flying);
     void landingChanged(bool landing);
     void guidedModeChanged(bool guidedMode);
     void vtolInFwdFlightChanged(bool vtolInFwdFlight);
@@ -1358,6 +1364,7 @@ private:
     double          _rcRSSIstore;
     bool            _autoDisconnect;    ///< true: Automatically disconnect vehicle when last connection goes away or lost heartbeat
     bool            _flying;
+    bool            _failsafeState;
     bool            _landing;
     bool            _vtolInFwdFlight;
     uint32_t        _onboardControlSensorsPresent;

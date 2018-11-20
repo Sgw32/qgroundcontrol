@@ -76,7 +76,7 @@ Rectangle {
                     transform: Rotation {
                         origin.x:       root_pwm1.width  / 2
                         origin.y:       root_pwm1.height / 2
-                        angle:          -45+_starter/100*90
+                        angle:          -45+_cooler/100*90
                     }
                 }
                 //-- Pointer2
@@ -87,7 +87,7 @@ Rectangle {
                     fillMode:           Image.PreserveAspectFit
                     anchors.fill:       parent
                     sourceSize.height:  parent.height
-                    visible:        true
+                    visible:        false
                     transform: Rotation {
                         origin.x:       root_pwm1.width  / 2
                         origin.y:       root_pwm1.height / 2
@@ -118,7 +118,24 @@ Rectangle {
                         origin.y:       root_pwm1.height / 2
                         angle:          -180
                     }
-                    visible:        true
+                    visible:        false
+                }
+
+                Rectangle {
+                    anchors.centerIn:   parent
+                    width:              size * 0.001
+                    height:             size * 0.001
+                    opacity:            1
+
+                    QGCLabel {
+                        text:               "Cooler"
+                        anchors.bottomMargin:       1
+                        //font.family:        _activeVehicle ? ScreenTools.demiboldFontFamily : ScreenTools.normalFontFamily
+                        font.pointSize:     12
+                        color:              "red"
+                        anchors.centerIn:   parent
+                       }
+
                 }
             }
 
@@ -217,6 +234,29 @@ Rectangle {
                         angle:          -180
                     }
                     visible:        true
+                }
+
+                Rectangle {
+                    anchors.centerIn:   parent
+                    width:              size * 0.001
+                    height:             size * 0.001
+                    opacity:            1
+
+                    QGCLabel {
+                        text:               "Starter"
+                        anchors.bottomMargin:       1
+                        font.family:        vehicle ? ScreenTools.demiboldFontFamily : ScreenTools.normalFontFamily
+                        font.pointSize:     12
+                        color:              "red"
+                        anchors.centerIn:   parent
+                       }
+                    QGCLabel {
+                        text:               qsTr("\n")+"Throttle"
+                        font.family:        vehicle ? ScreenTools.demiboldFontFamily : ScreenTools.normalFontFamily
+                        font.pointSize:     12
+                        color:              "blue"
+                        anchors.centerIn:   parent
+                       }
                 }
             }
 

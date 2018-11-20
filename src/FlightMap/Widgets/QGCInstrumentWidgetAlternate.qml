@@ -20,14 +20,14 @@ import QGroundControl.Palette       1.0
 Rectangle {
     id:             root
     width:          getPreferredInstrumentWidth()*1.4
-    height:         getPreferredInstrumentWidth()*1.7
-    radius:         getPreferredInstrumentWidth()*1.8
+    height:         getPreferredInstrumentWidth()*1.5
+    radius:         getPreferredInstrumentWidth()*0.3
     color:          qgcPal.window
     border.width:   1
     border.color:   _isSatellite ? qgcPal.mapWidgetBorderLight : qgcPal.mapWidgetBorderDark
 
     property var    _qgcView:           qgcView
-    property real   _innerRadius:       (width - (_topBottomMargin * 3)) / 3
+    property real   _innerRadius:       (width - (_topBottomMargin * 3)) / 2
     property real   _outerRadius:       _innerRadius + _topBottomMargin
     property real   _defaultSize:       ScreenTools.defaultFontPixelHeight * (9)
     property real   _sizeRatio:         ScreenTools.isTinyScreen ? (width / _defaultSize) * 0.5 : width / _defaultSize
@@ -66,10 +66,10 @@ Rectangle {
     QGCAttitudeWidget {
         id:                 attitude
         anchors.top:        root.top
-        anchors.topMargin:  ScreenTools.defaultFontPixelHeight*3
+        anchors.topMargin:  _topBottomMargin * 3/2
         //anchors.leftMargin: _topBottomMargin
         //anchors.left:       parent.left
-        size:               _innerRadius * 2.4
+        size:               _innerRadius * 2
         vehicle:            _activeVehicle
         //anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter:   parent.horizontalCenter
@@ -77,8 +77,8 @@ Rectangle {
 
     QGCLabel {
         id:                 altitude_att
-        anchors.left:        attitude.right
-        anchors.leftMargin:  ScreenTools.defaultFontPixelHeight / 4
+        anchors.right:        attitude.right
+        anchors.rightMargin:  ScreenTools.defaultFontPixelHeight / 4
         anchors.verticalCenter: attitude.verticalCenter
         wrapMode:               Text.WordWrap
         text:                   _altitudeS //"T1"
@@ -88,8 +88,8 @@ Rectangle {
 
     QGCLabel {
         id:                 aspd_att
-        anchors.right:        attitude.left
-        anchors.rightMargin:  ScreenTools.defaultFontPixelHeight / 4
+        anchors.left:        attitude.left
+        anchors.leftMargin:  ScreenTools.defaultFontPixelHeight / 4
         anchors.verticalCenter: attitude.verticalCenter
         wrapMode:               Text.WordWrap
         text:                   _airSpeedS //"T2"
@@ -99,9 +99,9 @@ Rectangle {
 
     QGCLabel {
         id:                 asgs_att
-        anchors.top:        attitude.bottom
+        anchors.bottom:        attitude.bottom
         anchors.topMargin:  ScreenTools.defaultFontPixelHeight / 4
-        anchors.rightMargin: 50
+        anchors.rightMargin: 70
         anchors.right: attitude.horizontalCenter
         //wrapMode:               Text.WordWrap
         text:                   "AS" + _airSpeedS + "\nGS" +_groundSpeedS
@@ -111,9 +111,9 @@ Rectangle {
 
     QGCLabel {
         id:                 batt_att
-        anchors.top:        attitude.bottom
+        anchors.bottom:        attitude.bottom
         anchors.topMargin:  ScreenTools.defaultFontPixelHeight / 4
-        anchors.leftMargin:  50
+        anchors.leftMargin:  70
         anchors.left: attitude.horizontalCenter
         //wrapMode:               Text.WordWrap
         text:                   _voltageS
@@ -121,7 +121,7 @@ Rectangle {
         font.family:            ScreenTools.demiboldFontFamily
     }
 
-    QGCCompassWidget {
+    /*QGCCompassWidget {
         id:                 compass
         anchors.leftMargin: _spacing
         anchors.topMargin:  ScreenTools.defaultFontPixelHeight / 2
@@ -129,7 +129,7 @@ Rectangle {
         size:               _innerRadius / 1.3
         vehicle:            _activeVehicle
         anchors.horizontalCenter:   parent.horizontalCenter
-    }
+    }*/
 
     Item {
         id:                 _valuesItem

@@ -109,7 +109,7 @@ Item {
             opacity:            1
 
             QGCLabel {
-                text:               vehicle.armed ? qsTr("ARMED") : qsTr("DISARMED\n")
+                text:               vehicle.failsafeState ? "FAILSAFE" : vehicle.armed ? qsTr("ARMED") : qsTr("DISARMED\n")
                 anchors.bottomMargin:       1
                 font.family:        vehicle ? ScreenTools.demiboldFontFamily : ScreenTools.normalFontFamily
                 font.pointSize:     12
