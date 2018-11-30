@@ -1026,6 +1026,37 @@ void UAS::setExternalControlSetpoint(float roll, float pitch, float yaw, float t
                                                  &message,
                                                  this->uasId,
                                                  newPitchCommand, newRollCommand, newThrustCommand, newYawCommand, buttons);
+
+            _vehicle->sendMessageOnLink(_vehicle->priorityLink(), message);
+
+            /*qWarning() << "roll:pitch:yaw:throttle SEND MANUAL CONTROL" << 1000.0+newPitchCommand
+                       << 1000.0+newRollCommand
+                       << 1000.0+newYawCommand
+                       << 1000.0+newThrustCommand;
+            */
+            mavlink_msg_rc_channels_override_pack(mavlink->getSystemId(),
+                                                  mavlink->getComponentId(),
+                                                  &message,
+                                                  this->uasId,
+                                                  _vehicle->priorityLink()->mavlinkChannel(),
+                                                  1500.0+newPitchCommand,
+                                                  1500.0+newRollCommand,
+                                                  1000.0+newThrustCommand,
+                                                  1500.0+newYawCommand,
+                                                  1100,
+                                                  1100,
+                                                  1100,
+                                                  1100,
+                                                  1100,
+                                                  1100,
+                                                  1100,
+                                                  1100,
+                                                  1100,
+                                                  1100,
+                                                  1100,
+                                                  1100,
+                                                  1100,
+                                                  1100);
         }
 
         _vehicle->sendMessageOnLink(_vehicle->priorityLink(), message);

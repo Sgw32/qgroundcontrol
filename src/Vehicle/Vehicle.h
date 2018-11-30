@@ -223,6 +223,21 @@ private:
     Fact        _throttleFact;
 };
 
+class VehicleNavCtlFactGroup : public FactGroup
+{
+    Q_OBJECT
+
+public:
+    VehicleNavCtlFactGroup(QObject* parent = nullptr);
+
+    Q_PROPERTY(Fact* altError      READ altError      CONSTANT)
+    Fact* altError         (void) { return &_altErrorFact; }
+    static const char* _altErrorFactName;
+
+private:
+    Fact        _altErrorFact;
+};
+
 class VehicleWindFactGroup : public FactGroup
 {
     Q_OBJECT
@@ -711,6 +726,7 @@ public:
     Q_PROPERTY(FactGroup* wind              READ windFactGroup              CONSTANT)
     Q_PROPERTY(FactGroup* vibration         READ vibrationFactGroup         CONSTANT)
     Q_PROPERTY(FactGroup* ice               READ ICEFactGroup               CONSTANT)
+    Q_PROPERTY(FactGroup* navCtl            READ NavCtlFactGroup               CONSTANT)
     Q_PROPERTY(FactGroup* temperature       READ temperatureFactGroup       CONSTANT)
     Q_PROPERTY(FactGroup* clock             READ clockFactGroup             CONSTANT)
     Q_PROPERTY(FactGroup* setpoint          READ setpointFactGroup          CONSTANT)
@@ -818,6 +834,7 @@ public:
 
     typedef enum {
         JoystickModeRC,         ///< Joystick emulates an RC Transmitter
+        JoystickModeRC_APM,
         JoystickModeAttitude,
         JoystickModePosition,
         JoystickModeForce,
@@ -1009,6 +1026,7 @@ public:
     FactGroup* battery2FactGroup        (void) { return &_battery2FactGroup; }
     FactGroup* windFactGroup            (void) { return &_windFactGroup; }
     FactGroup* ICEFactGroup             (void) { return &_ICEFactGroup; }
+    FactGroup* NavCtlFactGroup          (void) { return &_NavCtlFactGroup; }
     FactGroup* vibrationFactGroup       (void) { return &_vibrationFactGroup; }
     FactGroup* temperatureFactGroup     (void) { return &_temperatureFactGroup; }
     FactGroup* clockFactGroup           (void) { return &_clockFactGroup; }
@@ -1277,6 +1295,7 @@ private:
     void _handleWindCov(mavlink_message_t& message);
     void _handleVibration(mavlink_message_t& message);
     void _handleICE(mavlink_message_t& message);
+    void _handleNavControllerOutput(mavlink_message_t& message);
     void _handleExtendedSysState(mavlink_message_t& message);
     void _handleCommandAck(mavlink_message_t& message);
     void _handleCommandLong(mavlink_message_t& message);
@@ -1524,6 +1543,7 @@ private:
     VehicleBatteryFactGroup         _battery2FactGroup;
     VehicleWindFactGroup            _windFactGroup;
     VehicleICEFactGroup             _ICEFactGroup;
+    VehicleNavCtlFactGroup          _NavCtlFactGroup;
     VehicleVibrationFactGroup       _vibrationFactGroup;
     VehicleTemperatureFactGroup     _temperatureFactGroup;
     VehicleClockFactGroup           _clockFactGroup;
@@ -1552,6 +1572,7 @@ private:
     static const char* _battery2FactGroupName;
     static const char* _windFactGroupName;
     static const char* _ICEFactGroupName;
+    static const char* _NavCtlFactGroupName;
     static const char* _vibrationFactGroupName;
     static const char* _temperatureFactGroupName;
     static const char* _clockFactGroupName;

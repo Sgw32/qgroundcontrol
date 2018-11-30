@@ -150,7 +150,7 @@ Item {
     Rectangle {
         id:             mask
         anchors.fill:   instrument
-        radius:         width / 2
+        radius:         width / 5
         color:          "black"
         visible:        false
     }
@@ -164,7 +164,7 @@ Item {
     Rectangle {
         id:             borderRect
         anchors.fill:   parent
-        radius:         width / 2
+        radius:         width / 5
         color:          Qt.rgba(0,0,0,0)
         border.color:   qgcPal.text
         border.width:   1

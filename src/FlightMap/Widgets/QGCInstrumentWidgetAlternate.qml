@@ -9,6 +9,7 @@
 
 
 import QtQuick 2.3
+import QtQuick.Controls 1.2
 
 import QGroundControl               1.0
 import QGroundControl.Controls      1.0
@@ -49,13 +50,15 @@ Rectangle {
 */
 
     property real _altitudeS:  _activeVehicle ? _activeVehicle.altitudeRelative.valueString : 0
+    property real _altError:  _activeVehicle ? _activeVehicle.navCtl.altError.rawValue : 0
     property real _desiredAltitudeS:  _activeVehicle ? _activeVehicle.altitudeRelative.valueString : 0
     property real _airSpeedS:  _activeVehicle ? _activeVehicle.airSpeed.valueString : 0
     property real _groundSpeedS:  _activeVehicle ? _activeVehicle.groundSpeed.valueString : 0
     property int _percentS:  _activeVehicle ? _activeVehicle.battery.percentRemaining.valueString : 0
     property real _voltageS:  _activeVehicle ? _activeVehicle.battery.voltage.valueString : 0
     property real _currentS:  _activeVehicle ? _activeVehicle.battery.current.valueString : 0
-
+    property real _altErrorConstrain1: _altError > 50 ? 50 : _altError
+    property real _altErrorConstrain2: _altError < -50 ? -50 : _altError
     // Prevent all clicks from going through to lower layers
     DeadMouseArea {
         anchors.fill: parent
@@ -66,23 +69,57 @@ Rectangle {
     QGCAttitudeWidget {
         id:                 attitude
         anchors.top:        root.top
-        anchors.topMargin:  _topBottomMargin * 3/2
+        anchors.bottom:        root.bottom
+        anchors.topMargin:  _topBottomMargin
+        anchors.bottomMargin:  _topBottomMargin
         //anchors.leftMargin: _topBottomMargin
         //anchors.left:       parent.left
         size:               _innerRadius * 2
         vehicle:            _activeVehicle
-        //anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter:   parent.horizontalCenter
+    }
+
+    /*ProgressBar {
+        id:             progressBar
+        anchors.right:  attitude.right
+        anchors.rightMargin:  ScreenTools.defaultFontPixelHeight / 4
+        height:            150
+        anchors.verticalCenter: attitude.verticalCenter
+        orientation:    Qt.Vertical
+        minimumValue:   0
+        maximumValue:   100
+        value:          _altError+50.0
+    }*/
+
+    Rectangle {
+        id:             progressBar1
+        anchors.right:  attitude.right
+        anchors.rightMargin:  ScreenTools.defaultFontPixelHeight / 4
+        height:            _altErrorConstrain1
+        width: 5
+        anchors.bottom: attitude.verticalCenter
+        color:          Qt.rgba(1,0,0,0.7)
+    }
+
+    Rectangle {
+        id:             progressBar2
+        anchors.right:  attitude.right
+        anchors.rightMargin:  ScreenTools.defaultFontPixelHeight / 4
+        height:            -_altErrorConstrain2
+        width: 5
+        anchors.top: attitude.verticalCenter
+        color:          Qt.rgba(1,0,0,0.7)
     }
 
     QGCLabel {
         id:                 altitude_att
-        anchors.right:        attitude.right
-        anchors.rightMargin:  ScreenTools.defaultFontPixelHeight / 4
+        anchors.left:        attitude.right
+        anchors.leftMargin:  -30
         anchors.verticalCenter: attitude.verticalCenter
         wrapMode:               Text.WordWrap
-        text:                   _altitudeS //"T1"
-        font.pointSize:         _labelFontSize
+        text:                   _altitudeS + "\n" +_altError
+        font.pointSize:         _labelFontSize/1.5
         font.family:            ScreenTools.demiboldFontFamily
     }
 
@@ -93,7 +130,7 @@ Rectangle {
         anchors.verticalCenter: attitude.verticalCenter
         wrapMode:               Text.WordWrap
         text:                   _airSpeedS //"T2"
-        font.pointSize:         _labelFontSize
+        font.pointSize:         _labelFontSize/1.5
         font.family:            ScreenTools.demiboldFontFamily
     }
 
@@ -101,11 +138,11 @@ Rectangle {
         id:                 asgs_att
         anchors.bottom:        attitude.bottom
         anchors.topMargin:  ScreenTools.defaultFontPixelHeight / 4
-        anchors.rightMargin: 70
+        anchors.rightMargin: 40
         anchors.right: attitude.horizontalCenter
         //wrapMode:               Text.WordWrap
         text:                   "AS" + _airSpeedS + "\nGS" +_groundSpeedS
-        font.pointSize:         _labelFontSize
+        font.pointSize:         _labelFontSize/1.5
         font.family:            ScreenTools.demiboldFontFamily
     }
 
@@ -113,11 +150,11 @@ Rectangle {
         id:                 batt_att
         anchors.bottom:        attitude.bottom
         anchors.topMargin:  ScreenTools.defaultFontPixelHeight / 4
-        anchors.leftMargin:  70
+        anchors.leftMargin:  40
         anchors.left: attitude.horizontalCenter
         //wrapMode:               Text.WordWrap
         text:                   _voltageS
-        font.pointSize:         _labelFontSize
+        font.pointSize:         _labelFontSize/1.5
         font.family:            ScreenTools.demiboldFontFamily
     }
 

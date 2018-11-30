@@ -278,6 +278,18 @@ Rectangle {
                 onClicked: showJoystickPanel()
             }
 
+            SubMenuButton {
+                id:                 standTest
+                setupIndicator:     true
+                setupComplete:      joystickManager.activeJoystick ? joystickManager.activeJoystick.calibrated : false
+                exclusiveGroup:     setupButtonGroup
+                visible:            _fullParameterVehicleAvailable && joystickManager.joysticks.length !== 0
+                text:               qsTr("Stand Test")
+                Layout.fillWidth:   true
+
+                onClicked: showJoystickPanel()
+            }
+
             Repeater {
                 id:     componentRepeater
                 model:  _fullParameterVehicleAvailable ? QGroundControl.multiVehicleManager.activeVehicle.autopilot.vehicleComponents : 0

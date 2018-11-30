@@ -76,6 +76,7 @@ const char* Vehicle::_battery1FactGroupName =           "battery";
 const char* Vehicle::_battery2FactGroupName =           "battery2";
 const char* Vehicle::_windFactGroupName =               "wind";
 const char* Vehicle::_ICEFactGroupName =                "ICE";
+const char* Vehicle::_NavCtlFactGroupName =             "NavCtl";
 const char* Vehicle::_vibrationFactGroupName =          "vibration";
 const char* Vehicle::_temperatureFactGroupName =        "temperature";
 const char* Vehicle::_clockFactGroupName =              "clock";
@@ -200,6 +201,7 @@ Vehicle::Vehicle(LinkInterface*             link,
     , _battery2FactGroup(this)
     , _windFactGroup(this)
     , _ICEFactGroup(this)
+    , _NavCtlFactGroup(this)
     , _vibrationFactGroup(this)
     , _temperatureFactGroup(this)
     , _clockFactGroup(this)
@@ -395,6 +397,7 @@ Vehicle::Vehicle(MAV_AUTOPILOT              firmwareType,
     , _battery2FactGroup(this)
     , _windFactGroup(this)
     , _ICEFactGroup(this)
+    , _NavCtlFactGroup(this)
     , _vibrationFactGroup(this)
     , _clockFactGroup(this)
     , _distanceSensorFactGroup(this)
@@ -466,7 +469,8 @@ void Vehicle::_commonInit(void)
     _addFactGroup(&_battery1FactGroup,          _battery1FactGroupName);
     _addFactGroup(&_battery2FactGroup,          _battery2FactGroupName);
     _addFactGroup(&_windFactGroup,              _windFactGroupName);
-    _addFactGroup(&_ICEFactGroup,         _ICEFactGroupName);
+    _addFactGroup(&_ICEFactGroup,               _ICEFactGroupName);
+    _addFactGroup(&_NavCtlFactGroup,            _NavCtlFactGroupName);
     _addFactGroup(&_vibrationFactGroup,         _vibrationFactGroupName);
     _addFactGroup(&_temperatureFactGroup,       _temperatureFactGroupName);
     _addFactGroup(&_clockFactGroup,             _clockFactGroupName);
@@ -656,6 +660,9 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
     switch (message.msgid) {
     case MAVLINK_MSG_ID_HOME_POSITION:
         _handleHomePosition(message);
+        break;
+    case MAVLINK_MSG_ID_NAV_CONTROLLER_OUTPUT:
+        _handleNavControllerOutput(message);
         break;
     case MAVLINK_MSG_ID_HEARTBEAT:
         _handleHeartbeat(message);
@@ -1391,6 +1398,11 @@ void Vehicle::_handleVibration(mavlink_message_t& message)
     _vibrationFactGroup.clipCount1()->setRawValue(vibration.clipping_0);
     _vibrationFactGroup.clipCount2()->setRawValue(vibration.clipping_1);
     _vibrationFactGroup.clipCount3()->setRawValue(vibration.clipping_2);
+}
+
+void Vehicle::_handleNavControllerOutput(mavlink_message_t& message)
+{
+    _NavCtlFactGroup.altError()->setRawValue(mavlink_msg_nav_controller_output_get_alt_error(&message));
 }
 
 void Vehicle::_handleICE(mavlink_message_t& message)
@@ -3874,6 +3886,16 @@ VehicleICEFactGroup::VehicleICEFactGroup(QObject* parent)
     _coolerFact.setRawValue(0);
     _starterFact.setRawValue(0);
     _throttleFact.setRawValue(0);
+}
+
+const char* VehicleNavCtlFactGroup::_altErrorFactName =      "altError";
+
+VehicleNavCtlFactGroup::VehicleNavCtlFactGroup(QObject* parent)
+    : FactGroup(1000, ":/json/Vehicle/NavCtlFact.json", parent)
+    , _altErrorFact        (0, _altErrorFactName,         FactMetaData::valueTypeDouble)
+{
+    _addFact(&_altErrorFact,_altErrorFactName);
+    _altErrorFact.setRawValue(0);
 }
 
 const char* VehicleVibrationFactGroup::_xAxisFactName =      "xAxis";

@@ -453,9 +453,9 @@ void APMFirmwarePlugin::_handleIncomingHeartbeat(Vehicle* vehicle, mavlink_messa
     }
 
     if (heartbeat.system_status == MAV_STATE_CRITICAL)
-        vehicle->_setFailsafeState(false);
-    else
         vehicle->_setFailsafeState(true);
+    else
+        vehicle->_setFailsafeState(false);
 
     vehicle->_setFlying(flying);
 }
